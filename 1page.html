@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Tribute Page</title>
+    <style>
+        /* Modern CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Custom Properties */
+        :root {
+            --primary-color: #4361ee;
+            --primary-color-rgb: 67, 97, 238; /* Added RGB values for primary color */
+            --secondary-color: #7209b7;
+            --accent-color: #f72585;
+            --background-color: #f8f9fa;
+            --text-color: #222;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --gradient-start: #4361ee;
+            --gradient-mid: #7209b7;
+            --gradient-end: #f72585;
+        }
+
+        body.dark-mode {
+            --background-color: #121212;
+            --text-color: #f8f9fa;
+            --primary-color: #4cc9f0;
+            --primary-color-rgb: 76, 201, 240; /* Added RGB values for primary color */
+            --secondary-color: #7209b7;
+            --accent-color: #f72585;
+            --gradient-start: #4cc9f0;
+            --gradient-mid: #7209b7;
+            --gradient-end: #f72585;
+        }
+
+        /* Fix for text color in dark mode */
+        body.dark-mode section {
+            background: rgba(40, 40, 40, 0.9);
+        }
+
+        body.dark-mode .video-description,
+        body.dark-mode p,
+        body.dark-mode h2,
+        body.dark-mode .search-term,
+        body.dark-mode .video-title {
+            color: var(--text-color);
+        }
+
+        /* Background gradient */
+        body {
+            background: linear-gradient(135deg, var(--background-color) 0%, var(--background-color) 100%);
+            background-attachment: fixed;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatEffect {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutLeft {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(-100%); opacity: 0; }
+        }
+
+        /* Spinner for loading */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--background-color);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        /* Base Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+            box-shadow: var(--box-shadow);
+        }
+
+        button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px var(--accent-color);
+        }
+
+        input[type="text"] {
+            padding: 0.75rem 1rem;
+            width: 70%;
+            border: none;
+            border-radius: 25px;
+            box-shadow: var(--box-shadow);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientBackground 5s ease infinite;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }x
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Search History */
+        .search-history-section {
+            margin: 2rem auto;
+            max-width: 800px;
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        body.dark-mode .search-history-section {
+            background: rgba(40, 40, 40, 0.9);
+        }
+
+        .search-history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        /* Search History Section Title */
+        .search-history-header h2 {
+            margin-bottom: 0;
+            position: relative;
+            display: inline-block;
+        }
+
+        .search-history-header h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 40px;
+            height: 3px;
+            background: var(--accent-color);
+            transition: var(--transition);
+        }
+
+        .search-history-header h2:hover::after {
+            width: 100%;
+        }
+
+        /* Recent Searches Label */
+        .recent-searches-label {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        body.dark-mode .recent-searches-label {
+            color: var(--accent-color);
+        }
+
+        .search-history-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .search-history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: var(--background-color);
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .search-history-item:hover {
+            transform: translateX(5px);
+            background: rgba(var(--primary-color-rgb), 0.1);
+        }
+
+        .search-term {
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .search-term:hover {
+            color: var(--primary-color);
+        }
+
+        .remove-btn {
+            background: none;
+            color: var(--accent-color);
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: var(--transition);
+            box-shadow: none;
+        }
+
+        .remove-btn:hover {
+            color: white;
+            background: var(--accent-color);
+        }
+
+        .clear-all-btn {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .history-empty {
+            text-align: center;
+            padding: 1rem;
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+
+        /* Section styling */
+        section {
+            margin-bottom: 2rem;
+            animation: fadeIn 0.5s ease-out;
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        section:hover {
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 50%;
+            height: 3px;
+            background: var(--accent-color);
+            transition: var(--transition);
+        }
+
+        h2:hover::after {
+            width: 100%;
+        }
+
+        /* Home Page */
+        #home {
+            display: block;
+        }
+
+        /* Tribute Page */
+        #tribute {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .profile-header {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        #image {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            animation: floatEffect 6s ease-in-out infinite;
+        }
+
+        #caption {
+            font-style: italic;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Tab navigation */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .tab-button {
+            padding: 0.5rem 1rem;
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
+            box-shadow: none;
+        }
+
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            font-weight: bold;
+        }
+
+        .tab-button:hover {
+            background: none;
+            color: var(--primary-color);
+            transform: none;
+            box-shadow: none;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Photo Gallery */
+        #photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        #photo-gallery img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        #photo-gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Video Gallery */
+        #video-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .video-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        body.dark-mode .video-card {
+            background: rgba(40, 40, 40, 0.9);
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        }
+
+        .video-thumbnail iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-info {
+            padding: 1rem;
+        }
+
+        .video-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .video-description {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+
+        /* Dark mode toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: rotate(45deg);
+            background: var(--secondary-color);
+        }
+
+        /* Achievements Styles */
+        .achievements-title {
+            margin-top: 2rem;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .achievements-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 50%;
+            height: 2px;
+            background: var(--accent-color);
+            transition: var(--transition);
+        }
+
+        .achievements-title:hover::after {
+            width: 100%;
+        }
+
+        .achievements-list {
+            margin-top: 1rem;
+            list-style-type: none;
+        }
+
+        .achievements-list li {
+            padding: 0.8rem 0;
+            position: relative;
+            padding-left: 2rem;
+            line-height: 1.6;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .achievements-list li:last-child {
+            border-bottom: none;
+        }
+
+        .achievements-list li::before {
+            content: '✦';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .achievements-list li:hover {
+            transform: translateX(5px);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .achievements-list li:hover::before {
+            color: var(--primary-color);
+            transform: scale(1.2);
+        }
+
+        /* Mouse Trail Effect */
+        .cursor-trail {
+            pointer-events: none;
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            opacity: 0.5;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, opacity 0.3s;
+        }
+
+        /* Favorite Button Styles */
+        .tribute-header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+
+        .favorite-btn {
+            background-color: transparent;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .favorite-btn:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .favorite-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        /* Favorites list styles */
+        .favorites-list {
+            list-style-type: none;
+        }
+
+        .favorite-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: var(--background-color);
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .favorite-item:hover {
+            transform: translateX(5px);
+            background: rgba(var(--primary-color-rgb), 0.1);
+        }
+        .sign-out-btn {
+    padding: 0.5rem 1rem;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: var(--transition);
+    box-shadow: var(--box-shadow);
+    position: absolute; /* Position it in the top right corner */
+    top: 1rem;
+    right: 1rem;
+}
+
+.sign-out-btn:hover {
+    background: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px var(--accent-color);
+}
+    </style>
+</head>
+<body>
+    <div class="dark-mode-toggle" onclick="toggleDarkMode()">🌓</div>
+
+    <div class="container">
+        <!-- Home Page -->
+        <div id="home">
+            <header>
+                <h1 class="title">Tribute Page</h1>
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Search for a person..." onkeypress="checkEnter(event)">
+                    <button onclick="searchPerson()">Search</button>
+                </div>
+                <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
+            </header>
+
+            <div id="search-result"></div>
+
+            <div class="search-history-section">
+                <div class="search-history-header">
+                    <div>
+                        <h2>Search History</h2>
+                        <span class="recent-searches-label">Your recent searches will appear here</span>
+                    </div>
+                    <button class="clear-all-btn" onclick="clearAllHistory()">Clear All</button>
+                </div>
+                <ul id="search-history-list" class="search-history-list">
+                    <li class="history-empty">No search history yet. Search for someone!</li>
+                </ul>
+            </div>
+
+            <!-- Favorites Section -->
+            <div class="search-history-section">
+                <div class="search-history-header">
+                    <div>
+                        <h2>Favorites</h2>
+                        <span class="recent-searches-label">Your favorite people will appear here</span>
+                    </div>
+                    <button class="clear-all-btn" onclick="clearAllFavorites()">Clear All</button>
+                </div>
+                <ul id="favorites-list" class="search-history-list">
+                    <li class="history-empty">No favorites yet. Add someone to favorites!</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tribute Page -->
+        <div id="tribute">
+            <header>
+                <div class="tribute-header-controls">
+                    <button onclick="showHome()">← Back</button>
+                    <button id="favorite-btn" class="favorite-btn" onclick="toggleFavorite()">❤️ Add to Favorites</button>
+                </div>
+                <h1 id="title" class="title">Person Name</h1>
+                <p id="caption">Caption</p>
+            </header>
+
+            <section class="profile-header">
+                <div class="image-container">
+                    <img id="image" src="" alt="Person Image">
+                </div>
+
+                <div class="profile-info">
+                    <div class="tabs">
+                        <button class="tab-button active" onclick="openTab(event, 'summary')">Summary</button>
+                        <button class="tab-button" onclick="openTab(event, 'childhood')">Childhood</button>
+                        <button class="tab-button" onclick="openTab(event, 'career')">Career</button>
+                        <button class="tab-button" onclick="openTab(event, 'achievements')">Achievements</button>
+                    </div>
+
+                    <div id="summary" class="tab-content active">
+                        <p id="summary-text"></p>
+                    </div>
+
+                    <div id="childhood" class="tab-content">
+                        <p id="childhood-text"></p>
+                    </div>
+
+                    <div id="career" class="tab-content">
+                        <p id="career-text"></p>
+                    </div>
+
+                    <div id="achievements" class="tab-content">
+                        <p id="achievements-text"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Photo Gallery</h2>
+                <div id="photo-gallery"></div>
+            </section>
+
+            <section>
+                <h2>Videos</h2>
+                <div id="video-gallery"></div>
+            </section>
+        </div>
+
+        <footer>
+            <p>&copyright 2025  | Interactive Tribute Page</p>
+        </footer>
+    </div>
+
+    <script>
+        // Load page and search history on page load
+        let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+        window.onload = function() {
+            createMouseTrail();
+            updateSearchHistoryDisplay();
+            updateFavoritesDisplay();
+            applyStoredDarkModePreference();
+        };
+
+        async function searchPerson() {
+            const input = document.getElementById('search-input').value.trim();
+            if (!input) {
+                document.getElementById('search-result').innerHTML = '<p>Please enter a name.</p>';
+                return;
+            }
+
+            // Clear previous search results
+            document.getElementById('search-result').innerHTML = '<h3>Search Results</h3><p>Loading...</p><div class="spinner"></div>';
+
+            try {
+                const searchTerm = input.toLowerCase();
+                const searchResponse = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&list=search&srsearch=${encodeURIComponent(searchTerm)}&format=json`);
+                const searchData = await searchResponse.json();
+                if (searchData.query.search.length === 0) {
+                    document.getElementById('search-result').innerHTML = '<p>No results found.</p>';
+                    return;
+                }
+                const pageTitle = searchData.query.search[0].title;
+
+                const pageResponse = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=extracts|pageimages|description&explaintext&titles=${encodeURIComponent(pageTitle)}&format=json&redirects=1&piprop=original`);
+                const pageData = await pageResponse.json();
+                const pages = pageData.query.pages;
+                const pageId = Object.keys(pages)[0];
+                if (pageId === '-1') {
+                    document.getElementById('search-result').innerHTML = '<p>No results found.</p>';
+                    return;
+                }
+                const page = pages[pageId];
+
+                // Add to search history
+                addToSearchHistory(page.title);
+
+                document.getElementById('home').style.display = 'none';
+                document.getElementById('tribute').style.display = 'block';
+                document.getElementById('title').innerText = page.title;
+                document.getElementById('caption').innerText = page.description || '';
+
+                // Update favorite button state
+                updateFavoriteButtonState(page.title);
+
+                if (page.original && page.original.source) {
+                    document.getElementById('image').src = page.original.source;
+                    document.getElementById('image').style.display = 'block';
+                } else {
+                    document.getElementById('image').style.display = 'none';
+                }
+
+                // Set summary, childhood, career, and achievements text
+                const extract = page.extract.split('\n');
+                document.getElementById('summary-text').innerText = extract[0] || "Summary not available."; // First paragraph as summary
+                document.getElementById('childhood-text').innerText = extract[1] || "Childhood information not available."; // Placeholder text
+                document.getElementById('career-text').innerText = extract[2] || "Career information not available."; // Placeholder text
+                document.getElementById('achievements-text').innerText = extract[3] || "Achievements information not available."; // Placeholder text
+
+                // Fetch images for photo gallery
+                const imagesResponse = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=images&titles=${encodeURIComponent(page.title)}&format=json`);
+                const imagesData = await imagesResponse.json();
+                const imagesPage = imagesData.query.pages[pageId];
+
+                const photoGallery = document.getElementById('photo-gallery');
+                photoGallery.innerHTML = '';
+
+                if (imagesPage.images) {
+                    const imageTitles = imagesPage.images.slice(0, 5).map(img => img.title);
+
+                    for (const title of imageTitles) {
+                        const imageInfoResponse = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&titles=${encodeURIComponent(title)}&prop=imageinfo&iiprop=url&format=json`);
+                        const imageInfoData = await imageInfoResponse.json();
+                        const imageId = Object.keys(imageInfoData.query.pages)[0];
+                        const imageInfo = imageInfoData.query.pages[imageId];
+
+                        if (imageInfo.imageinfo) {
+                            const imgUrl = imageInfo.imageinfo[0].url;
+                            const img = document.createElement('img');
+                            img.src = imgUrl;
+                            img.alt = title;
+                            photoGallery.appendChild(img);
+                        }
+                    }
+                }
+
+                // Fetch YouTube videos
+                await searchYouTubeVideos(page.title);
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('search-result').innerHTML = '<p>Error fetching data. Please try again later.</p>';
+            }
+        }
+
+        // Search history functions
+        function addToSearchHistory(term) {
+            // Remove duplicate if exists
+            searchHistory = searchHistory.filter(item => item !== term);
+
+            // Add new term at the beginning
+            searchHistory.unshift(term);
+
+            // Keep only the last 10 searches
+            if (searchHistory.length > 10) {
+                searchHistory.pop();
+            }
+
+            // Save to localStorage
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+
+            // Update display
+            updateSearchHistoryDisplay();
+        }
+
+        function updateSearchHistoryDisplay() {
+            const historyList = document.getElementById('search-history-list');
+            const recentLabel = document.querySelector('.recent-searches-label');
+
+            if (searchHistory.length === 0) {
+                historyList.innerHTML = '<li class="history-empty">No search history yet. Search for someone!</li>';
+                recentLabel.textContent = 'Your recent searches will appear here';
+                return;
+            }
+
+            historyList.innerHTML = '';
+            recentLabel.textContent = `Your recent searches (${searchHistory.length})`;
+
+            searchHistory.forEach((term, index) => {
+                const li = document.createElement('li');
+                li.className = 'search-history-item';
+
+                const termSpan = document.createElement('span');
+                termSpan.className = 'search-term';
+                termSpan.textContent = term;
+                termSpan.onclick = function() {
+                    document.getElementById('search-input').value = term;
+                    searchPerson();
+                };
+
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-btn';
+                removeBtn.textContent = '×';
+                removeBtn.setAttribute('title', 'Remove from history');
+                removeBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    removeFromHistory(index);
+                };
+
+                li.appendChild(termSpan);
+                li.appendChild(removeBtn);
+                historyList.appendChild(li);
+            });
+        }
+
+        function removeFromHistory(index) {
+            searchHistory.splice(index, 1);
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            updateSearchHistoryDisplay();
+        }
+
+        function clearAllHistory() {
+            searchHistory = [];
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            updateSearchHistoryDisplay();
+        }
+
+        // Favorites functions
+        function updateFavoritesDisplay() {
+            const favoritesList = document.getElementById('favorites-list');
+            const favoritesLabel = document.querySelector('.search-history-section:nth-of-type(2) .recent-searches-label');
+
+            if (favorites.length === 0) {
+                favoritesList.innerHTML = '<li class="history-empty">No favorites yet. Add someone to favorites!</li>';
+                favoritesLabel.textContent = 'Your favorite people will appear here';
+                return;
+            }
+
+            favoritesList.innerHTML = '';
+            favoritesLabel.textContent = `Your favorites (${favorites.length})`;
+
+            favorites.forEach((favorite, index) => {
+                const li = document.createElement('li');
+                li.className = 'search-history-item';
+
+                const favoriteSpan = document.createElement('span');
+                favoriteSpan.className = 'search-term';
+                favoriteSpan.textContent = favorite;
+                favoriteSpan.onclick = function() {
+                    document.getElementById('search-input').value = favorite;
+                    searchPerson();
+                };
+
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-btn';
+                removeBtn.textContent = '×';
+                removeBtn.setAttribute('title', 'Remove from favorites');
+                removeBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    removeFromFavorites(favorite);
+                };
+
+                li.appendChild(favoriteSpan);
+                li.appendChild(removeBtn);
+                favoritesList.appendChild(li);
+            });
+        }
+
+        function addToFavorites(person) {
+            if (!favorites.includes(person)) {
+                favorites.push(person);
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                updateFavoritesDisplay();
+            }
+            updateFavoriteButtonState(person);
+        }
+
+        function removeFromFavorites(person) {
+            favorites = favorites.filter(favorite => favorite !== person);
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            updateFavoritesDisplay();
+            updateFavoriteButtonState(person);
+        }
+        function signOut() {
+    window.location.href = 'temp4.html'; // Redirect to temp3.html
+}
+
+        function clearAllFavorites() {
+            favorites = [];
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            updateFavoritesDisplay();
+            // Update button state if we're viewing a person page
+            const currentPerson = document.getElementById('title').textContent;
+            if (currentPerson) {
+                updateFavoriteButtonState(currentPerson);
+            }
+        }
+
+        function toggleFavorite() {
+            const personName = document.getElementById('title').textContent;
+            if (favorites.includes(personName)) {
+                removeFromFavorites(personName);
+                document.getElementById('favorite-btn').textContent = "❤️ Add to Favorites";
+                document.getElementById('favorite-btn').classList.remove('active');
+            } else {
+                addToFavorites(personName);
+                document.getElementById('favorite-btn').textContent = "💔 Remove from Favorites";
+                document.getElementById('favorite-btn').classList.add('active');
+            }
+        }
+
+        function updateFavoriteButtonState(personName) {
+            const favoriteBtn = document.getElementById('favorite-btn');
+            if (favorites.includes(personName)) {
+                favoriteBtn.textContent = "💔 Remove from Favorites";
+                favoriteBtn.classList.add('active');
+            } else {
+                favoriteBtn.textContent = "❤️ Add to Favorites";
+                favoriteBtn.classList.remove('active');
+            }
+        }
+
+        async function searchYouTubeVideos(query) {
+            const videoGallery = document.getElementById('video-gallery');
+            videoGallery.innerHTML = '<p>Loading videos...</p>';
+
+            try {
+                // Clean the query for YouTube
+                const sanitizedQuery = encodeURIComponent(query);
+
+                // Create direct search links rather than playlists which may not work consistently
+                const videoTypes = [
+                    {
+                        title: 'Biography',
+                        searchQuery: `${sanitizedQuery}+biography`,
+                        description: 'Learn about the life and achievements of this historical figure.'
+                    },
+                    {
+                        title: 'Documentary',
+                        searchQuery: `${sanitizedQuery}+documentary`,
+                        description: 'Watch documentaries featuring detailed explorations and analysis.'
+                    },
+                    {
+                        title: 'History',
+                        searchQuery: `${sanitizedQuery}+history`,
+                        description: 'Explore the historical context and impact on the world.'
+                    }
+                ];
+
+                let videoHTML = '';
+
+                for (const video of videoTypes) {
+                    // Create a direct link to YouTube search instead of embedding which can be unreliable
+                    videoHTML += `
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <iframe
+                                src="https://www.youtube.com/embed?listType=search&list=${video.searchQuery}"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">${query} ${video.title}</div>
+                            <div class="video-description">${video.description}</div>
+                        </div>
+                    </div>`;
+                }
+
+                videoGallery.innerHTML = videoHTML;
+
+                // Add a backup message and link in case embeds don't work
+                videoGallery.innerHTML += `
+                <div style="margin-top: 1rem; text-align: center;">
+                    <p>If videos don't load properly, you can search directly on YouTube:</p>
+                    <a href="https://www.youtube.com/results?search_query=${sanitizedQuery}"
+                       target="_blank"
+                       style="display: inline-block; margin-top: 0.5rem; color: var(--primary-color); text-decoration: none;">
+                        Search "${query}" on YouTube →
+                    </a>
+                </div>`;
+            } catch (error) {
+                console.error('Error loading videos:', error);
+                videoGallery.innerHTML = `
+                <p>Unable to load videos at this time. Please try searching directly on YouTube.</p>
+                <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(query)}"
+                   target="_blank"
+                   style="display: inline-block; margin-top: 0.5rem; color: var(--primary-color); text-decoration: none;">
+                    Search "${query}" on YouTube →
+                </a>`;
+            }
+        }
+
+        function showHome() {
+            document.getElementById('home').style.display = 'block';
+            document.getElementById('tribute').style.display = 'none';
+
+            // Clear the search results, input field, and remove any loading animations
+            document.getElementById('search-result').innerHTML = '';
+            document.getElementById('search-input').value = '';
+
+            // Remove any spinners or loading animations that might be present
+            const spinners = document.querySelectorAll('.spinner');
+            spinners.forEach(spinner => {
+                spinner.remove();
+            });
+        }
+
+        function checkEnter(event) {
+            if (event.key === 'Enter') {
+                searchPerson();
+            }
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            // Store user's preference in localStorage
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        }
+
+        // Apply dark mode on page load if previously selected
+        function applyStoredDarkModePreference() {
+            const storedDarkMode = localStorage.getItem('darkMode');
+            if (storedDarkMode === 'enabled') {
+                document.body.classList.add('dark-mode');
+            }
+        }
+
+        function openTab(evt, tabName) {
+            // Hide all tab content
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+
+            // Remove active class from all tab buttons
+            const tabButtons = document.getElementsByClassName('tab-button');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('active');
+            }
+
+            // Show the current tab and add active class to the button that opened it
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function createMouseTrail() {
+            const trailCount = 20;
+            const trails = [];
+
+            // Create mouse trail elements
+            for (let i = 0; i < trailCount; i++) {
+                const trail = document.createElement('div');
+                trail.className = 'cursor-trail';
+                document.body.appendChild(trail);
+                trails.push({
+                    element: trail,
+                    x: 0,
+                    y: 0,
+                    size: 8 - (i * 0.3),
+                    speed: 0.2 + (i * 0.01)
+                });
+            }
+
+            let mouseX = 0;
+            let mouseY = 0;
+
+            // Update mouse position
+            document.addEventListener('mousemove', function(e) {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            // Animate mouse trail
+            function animateTrails() {
+                trails.forEach((trail, index) => {
+                    // Calculate new position
+                    trail.x += (mouseX - trail.x) * trail.speed;
+                    trail.y += (mouseY - trail.y) * trail.speed;
+
+                    // Update trail element position
+                    trail.element.style.left = trail.x + 'px';
+                    trail.element.style.top = trail.y + 'px';
+                    trail.element.style.width = trail.size + 'px';
+                    trail.element.style.height = trail.size + 'px';
+
+                    // Set opacity based on distance from cursor
+                    const distance = Math.sqrt(
+                        Math.pow(mouseX - trail.x, 2) +
+                        Math.pow(mouseY - trail.y, 2)
+                    );
+                    const opacity = Math.max(0, 1 - (distance / 200));
+                    trail.element.style.opacity = opacity * 0.6;
+                });
+
+                requestAnimationFrame(animateTrails);
+            }
+
+            animateTrails();
+
+            // Add hover effect to elements
+            const interactiveElements = document.querySelectorAll('button, img, .tab-button');
+            interactiveElements.forEach(element => {
+                element.addEventListener('mouseover', function() {
+                    trails.forEach(trail => {
+                        trail.element.style.background = 'var(--primary-color)';
+                        trail.size *= 1.5;
+                    });
+                });
+
+                element.addEventListener('mouseout', function() {
+                    trails.forEach(trail => {
+                        trail.element.style.background = 'var(--accent-color)';
+                        trail.size /= 1.5;
+                    });
+                });
+            });
+        }
+    </script>
+</body>
+</html>

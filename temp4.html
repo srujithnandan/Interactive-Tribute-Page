@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #e5d3f8, #e5e23f);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        /* Container */
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            width: 350px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .container:hover {
+            transform: scale(1.05);
+        }
+
+        /* Heading */
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        /* Form Fields */
+        form label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        form input:focus {
+            border-color: #6a11cb;
+            outline: none;
+            box-shadow: 0 0 8px #6a11cb;
+        }
+
+        /* Forgot Password */
+        .forgot {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .forgot a {
+            color: #2575fc;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot a:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .btn {
+            display: block;
+            text-align: center;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+            background: #4CAF50;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #45a049;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 400px) {
+            .container {
+                width: 90%;
+            }
+        }
+
+        /* Sign Out Button Styles */
+        .sign-out-btn {
+            padding: 0.5rem 1rem;
+            background: #7209b7; /* Secondary color */
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: absolute; /* Position it in the top right corner */
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .sign-out-btn:hover {
+            background: #f72585; /* Accent color */
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(247, 37, 133, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Login</h2>
+    <form action="#" method="POST">
+        <label for="username">Email:</label>
+        <input type="text" id="username" name="username" placeholder="Enter Email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter Password" required>
+
+        <div class="forgot">
+            <a href="temp2.html">Forgot Password?</a>
+        </div>
+
+        <!-- Login Button -->
+        <a href="1page.html" class="btn">Login</a>
+    </form>
+</div>
+
+<!-- <button class="sign-out-btn" onclick="signOut()">Sign Out</button> -->
+
+<!-- <script>
+    function signOut() {
+        window.location.href = 'temp4.html'; // Redirect to temp3.html
+    }
+</script> -->
+
+</body>
+</html>
